@@ -1,0 +1,32 @@
+Simple light and fast SDL viewer.
+
+
+
+Just type "lavalamp file"  to open image 
+
+COMPILATION :
+---------------
+
+requirements : 
+	- libsdl1.2-dev
+	- libsdl-image1.2-dev
+	- libsdl-gfx-1.2-dev
+	- libsdl-ttf2.0-dev
+    - libconfig
+
+	Go to lavalamp rep, juste type :
+		- $ ./configure
+		- $ make
+
+
+INSTALLATION :
+----------------
+	
+	- $ make install
+
+
+CONFIGURATION :
+------------------
+
+Edit lavalamp.conf in your home directory and change options .
+
