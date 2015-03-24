@@ -4,6 +4,8 @@ Simple light and fast SDL viewer.
 
 Just type "lavalamp file"  to open image 
 
+Click on image or press "escape" to quit.
+
 COMPILATION :
 ---------------
 
