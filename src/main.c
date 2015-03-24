@@ -71,13 +71,17 @@ void wait_event()
             case SDLK_ESCAPE:
                 quit();
                 break;
+					
             case SDLK_SPACE:
                 quit();
                 break;
+					
             case SDLK_f:
         		break;
+					
             case SDLK_h:
                 break;
+					
             case SDLK_RIGHT:
                 image.imageRotate=image.imageRotate+90;
                 image.image = IMG_Load(image.imageName);
@@ -85,76 +89,32 @@ void wait_event()
                 // TODO (mck#1#): make a function
                 image.rectW = image.image->w+image.rectSize;
                 image.rectH = image.image->h+image.rectSize;
+					
                 if (image.activeWindow==1) {
                     image.screen = SDL_SetVideoMode(image.rectW, image.rectH, image.image->format->BitsPerPixel, SDL_HWSURFACE|SDL_DOUBLEBUF );
                 } else {
                     image.screen = SDL_SetVideoMode(image.rectW, image.rectH, image.image->format->BitsPerPixel,SDL_NOFRAME|SDL_HWSURFACE|SDL_DOUBLEBUF );
-                }
-                viewImage(image);struct image_F {
-    // Font
-    const char *fontFile;
-    int fontSize;
-    TTF_Font *fontName;
-    int fontColorR;
-    int fontColorG;
-    int fontColorB;
-    int textVisible;
-    int fontX;
-    int fontY;
-    // Border
-    int rectColorR;
-    int rectColorG;
-    int rectColorB;
-    int rectSize;
-    int rectH;
-    int rectW;
-    // For SDL
-    SDL_Rect imageXY, fontXY;
-    SDL_Surface * screen, *image, *text;
-    const SDL_VideoInfo *videoInfo;
-    const char *imageName;
-    int imageW;
-    int imageH;
-    int activeWindow;
-    int fullScreen;
-    // Transform
-    int imageRotate;
-    float imageRatio;
-    int zoom;
-    int unzoom;
-
-
-};
-struct image_F image;
+                }   
+					
                 break;
-            case SDLK_LEFT:
+
+			case SDLK_LEFT:
                 break;
-            default:
+
+			default:
                 break;
             }
 		case SDL_MOUSEBUTTONDOWN:
 				quit();
 				break;
         case SDL_MOUSEBUTTONUP:
-            // TODO (mck#1#): Add zoom unzoom function wifenetre = SDL_CreateWindow("Test SDL 2.0", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);th SDL_gfx (rotozoom).
+            // TODO (mck#1#): Add zoom unzoom function
             image.image = IMG_Load(image.imageName);
-            if(event.button.button==SDL_BUTTON_WHEELUP) {
-                //image.imageRatio=image.imageRatio+0.1;
-                //image.image = rotozoomSurface (image.image, 0, 1.1, 0);
-                //printf("Zoom image\n");
-              
+				
+            if(event.button.button==SDL_BUTTON_WHEELUP) {          
             }
-
-           if(event.button.button==SDL_BUTTON_WHEELDOWN) {
-                //image.imageRatio=image.imageRatio-0.1;
-                //image.image = zoomSurface(image.image,2,2, 1);
-                //image.image = rotozoomSurface (image.image, 0, 0.9, 0);
-                //printf("Unzoom image\n");              
+           if(event.button.button==SDL_BUTTON_WHEELDOWN) {           
             }
-
-			//image.rectW = image.image->w+image.rectSize;
-            //image.rectH = image.image->h+image.rectSize;
-            //zoomImage(image);
 		}
     }
 
@@ -167,22 +127,18 @@ void viewImage(struct image_F image)
     printf("image size  w:%d * h:%d - ",image.imageW,image.imageH);
     printf("screen size  w:%d * h:%d\n",image.videoInfo->current_w,image.videoInfo->current_h);
 
-	// only one size test, to improved.
+	// rezise big image to fit in screen
 	if (image.imageW>=image.videoInfo->current_w-50) {
 		if (Applied==0) {
 			float zoomRatio =(float)image.imageW/image.videoInfo->current_w;
 			float zoomApplied=((int)zoomRatio+1)-zoomRatio;
-			printf("zoom %f\n",zoomApplied);
 			image.image = rotozoomSurface(image.image, 0, zoomApplied, 1);
-		}
-
-		
+		}		
 	}
 		if (image.imageH>=image.videoInfo->current_h-50) {
 			if (Applied==0) {
 				float zoomRatio =(float)image.imageH/image.videoInfo->current_h;
 				float zoomApplied=((int)zoomRatio+1)-zoomRatio;
-				printf("zoom %f\n",zoomApplied);
 				image.image = rotozoomSurface(image.image, 0, zoomApplied, 1);
 			}
 		}
@@ -193,7 +149,6 @@ void viewImage(struct image_F image)
 
     image.rectW=image.imageW+image.rectSize;
     image.rectH=image.imageH+image.rectSize;
-	printf("new image size : %d %d \n",image.imageW,image.imageH);
 
 	// Replace by  switch/case in futur
 	
@@ -210,11 +165,12 @@ void viewImage(struct image_F image)
     char title[250];
     strcpy(title,"lavalamp : ");
     strcat(title,image.imageName);
+	
     SDL_WM_SetCaption(title, NULL);
-
     SDL_FillRect(image.screen, NULL, SDL_MapRGB(image.screen->format, image.rectColorR, image.rectColorG, image.rectColorB));
     SDL_BlitSurface(image.image, NULL, image.screen, &image.imageXY);
-    // create text (if TRUE in config file and font declared)
+
+	// create text (if TRUE in config file and font declared)
     if(image.textVisible==1) {
         if(image.fontFile) {
             SDL_Color fontColor= {image.fontColorR, image.fontColorG, image.fontColorB};
@@ -228,24 +184,21 @@ void viewImage(struct image_F image)
     }
 
     // View image1
-
     SDL_Flip(image.screen);
-
+	
     // Free surfaces
     SDL_FreeSurface(image.image);
     SDL_FreeSurface(image.screen);
-
+	
     // Wait mouse or keyboard events
     wait_event();
-
+	
     // Par ici la sortie... En français dans le texte.
     quit();
 }
 
 int main (int argc, char *argv[])
 {
-    // TODO (mck#1#): Add command line options (getopt)
-
     // For config file & libconfig
     char *homedir = getenv("HOME");
     char *configfile =homedir;
@@ -271,11 +224,10 @@ int main (int argc, char *argv[])
     image.rectColorB = 150 ;
     image.rectSize = 15;
     
-
     // Init SDL & SDL_TTF
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("SDL Error : %s",SDL_GetError());//on affiche l'erreur
-        return EXIT_FAILURE;//on sort du programme pour éviter de plus gros problèmes
+        printf("SDL Error : %s",SDL_GetError());
+        return EXIT_FAILURE;
     }
     TTF_Init();
 
@@ -285,7 +237,7 @@ int main (int argc, char *argv[])
 
     // Config file test
     if (!config_read_file(&cfg, configfile)) {
-        //printf("...Problem with config file, fix it please.\n");
+        printf("...Problem with config file, fix it please.\n");
         config_destroy(&cfg);
         return 0;
     }
@@ -305,20 +257,19 @@ int main (int argc, char *argv[])
     config_lookup_int(cf, "Font_X", &image.fontX);
     config_lookup_int(cf, "Font_Y", &image.fontY);
 
-
     // TODO (mck#1#):  make some tests (existing font, size, color, etc.)
 
     // Create rect border
     image.imageXY.x=image.rectSize/2;
     image.imageXY.y=image.rectSize/2;
 
-    // print info
+	// print info
     info();
 
-    // Get image name
+	// Get image name
     image.imageName = argv[1];
 
-    // If image name is null
+	// If image name is null
     if (image.imageName == NULL) {
 		exit(1);
     }
@@ -328,9 +279,10 @@ int main (int argc, char *argv[])
 
     // If file is not a picture file
     if ( image.image == NULL ) {
-        fprintf(stderr, "Echec de chargement du fichier %s \n",image.imageName);
+        fprintf(stderr, " error loading image %s \n",image.imageName);
         return 1;
     }
+	
     // get size
     image.imageW= image.image->w;
     image.imageH= image.image->h;
