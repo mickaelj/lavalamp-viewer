@@ -128,19 +128,8 @@ void wait_event()
 struct image_F image;
                 break;
             case SDLK_LEFT:
-                image.imageRotate=image.imageRotate+90;
-                image.image = IMG_Load(image.imageName);
-                image.image = rotozoomSurface(image.image,-image.imageRotate,1, 1);
-                image.rectW = image.image->w+image.rectSize;
-                image.rectH = image.image->h+image.rectSize;
-                if (image.activeWindow==1) {
-                    image.screen = SDL_SetVideoMode(image.rectW, image.rectH, image.image->format->BitsPerPixel, SDL_HWSURFACE|SDL_DOUBLEBUF );
-                } else {
-                    image.screen = SDL_SetVideoMode(image.rectW, image.rectH, image.image->format->BitsPerPixel,SDL_NOFRAME|SDL_HWSURFACE|SDL_DOUBLEBUF );
-                }
-                viewImage(image);
+                break;
             default:
-
                 break;
             }
 		case SDL_MOUSEBUTTONDOWN:
@@ -175,29 +164,27 @@ struct image_F image;
 void viewImage(struct image_F image)
 {
 	
-    printf("image size  h:%d x w:%d - ",image.imageH,image.imageW);
-    printf("screen size h:%d x w:%d\n",image.videoInfo->current_h,image.videoInfo->current_w);
+    printf("image size  w:%d * h:%d - ",image.imageW,image.imageH);
+    printf("screen size  w:%d * h:%d\n",image.videoInfo->current_w,image.videoInfo->current_h);
 
 	// only one size test, to improved.
-	if (image.imageW>=image.videoInfo->current_w-50 || (image.imageH>=image.videoInfo->current_h-50)) {
-		//printf("large image, apply ratio\n");
-		 if (Applied==0) {
-            float X = image.videoInfo->current_w ;
-            float Y = image.imageW;
-            float zoomRatio = X/Y;
-            float zoomApplied = image.imageW/zoomRatio;
-			image.image = rotozoomSurface(image.image, 0, zoomRatio/1.5, 1);
-		 }
+	if (image.imageW>=image.videoInfo->current_w-50) {
+		if (Applied==0) {
+			float zoomRatio =(float)image.imageW/image.videoInfo->current_w;
+			float zoomApplied=((int)zoomRatio+1)-zoomRatio;
+			printf("zoom %f\n",zoomApplied);
+			image.image = rotozoomSurface(image.image, 0, zoomApplied, 1);
+		}
+
 		
 	}
 		if (image.imageH>=image.videoInfo->current_h-50) {
-			 if (Applied==0) {
-            float X = image.videoInfo->current_h ;
-            float Y = image.imageH;
-            float zoomRatio = X/Y;
-            float zoomApplied = image.imageH/zoomRatio;
-			image.image = rotozoomSurface(image.image, 0, zoomRatio/1.5, 1);
-		 }
+			if (Applied==0) {
+				float zoomRatio =(float)image.imageH/image.videoInfo->current_h;
+				float zoomApplied=((int)zoomRatio+1)-zoomRatio;
+				printf("zoom %f\n",zoomApplied);
+				image.image = rotozoomSurface(image.image, 0, zoomApplied, 1);
+			}
 		}
   
     // Get image size
@@ -206,7 +193,7 @@ void viewImage(struct image_F image)
 
     image.rectW=image.imageW+image.rectSize;
     image.rectH=image.imageH+image.rectSize;
-	
+	printf("new image size : %d %d \n",image.imageW,image.imageH);
 
 	// Replace by  switch/case in futur
 	
