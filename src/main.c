@@ -190,6 +190,15 @@ void viewImage(struct image_F image)
 		 }
 		
 	}
+		if (image.imageH>=image.videoInfo->current_h-50) {
+			 if (Applied==0) {
+            float X = image.videoInfo->current_h ;
+            float Y = image.imageH;
+            float zoomRatio = X/Y;
+            float zoomApplied = image.imageH/zoomRatio;
+			image.image = rotozoomSurface(image.image, 0, zoomRatio/1.5, 1);
+		 }
+		}
   
     // Get image size
     image.imageW= image.image->w;
@@ -199,7 +208,7 @@ void viewImage(struct image_F image)
     image.rectH=image.imageH+image.rectSize;
 	
 
-	// Remplacer par un switch/case
+	// Replace by  switch/case in futur
 	
     if (image.activeWindow==1) {
         image.screen = SDL_SetVideoMode(image.rectW, image.rectH, image.image->format->BitsPerPixel, SDL_RESIZABLE|SDL_HWSURFACE|SDL_DOUBLEBUF );
